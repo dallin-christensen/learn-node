@@ -14,6 +14,7 @@ const storeSchema = new mongoose.Schema({
     trim: true,
   },
   tags: [],
+  photo: String,
 })
 
 storeSchema.pre('save', function(next) {
