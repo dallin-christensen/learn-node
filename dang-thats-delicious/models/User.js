@@ -22,6 +22,11 @@ const userSchema = new Schema({
   }
 })
 
+userSchema.virtual('gravatar').get(function() {
+  const hash = md5(this.email)
+  return `https://gravatar.com/avatar/${hash}?s=200`
+})
+
 // inserts password field into userSchema, with all the complex hash's and options included for us
 userSchema.plugin(passportLocalMongoose, { usernameField: 'email' })
 
