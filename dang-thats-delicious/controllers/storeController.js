@@ -3,6 +3,7 @@ const Store = mongoose.model('Store')
 const multer = require('multer')
 const jimp = require('jimp')
 const uuid = require('uuid')
+const { response } = require('express')
 
 const multerOptions = {
   storage: multer.memoryStorage(), // not saving actual file, will save resized & optimized file
@@ -100,4 +101,18 @@ exports.getStoresByTag = async (req, res, next) => {
 
 
   res.render('tags', { tags, stores, tag, title: 'Tags' })
+}
+
+exports.searchStores = async (req, res) => {
+  const stores = await Store.find({
+    $text: {
+      $search: req.query.q
+    }
+  }, {
+    score: { $meta: 'textScore' }
+  }).sort({
+    score: { $meta: 'textScore' }
+  }).limit(5)
+
+  res.json(stores)
 }
